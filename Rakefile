@@ -5,12 +5,17 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "richard_gill"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
-    gem.email = "asher.vanbrunt@gmail.com"
+    gem.summary = %Q{Versioning/Activity plugin for DataMapper}
+    gem.description = %Q{Versioning/Activity plugin for DataMapper}
+    gem.email = "asher.vanbrunt@okbreathe.com"
     gem.homepage = "http://github.com/okbreathe/richard_gill"
     gem.authors = ["Asher Van Brunt"]
     gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
+    gem.add_dependency "dm-core", ">= 1.0.0"
+    gem.add_dependency "dm-types" , ">= 1.0.0"
+    gem.add_dependency "dm-timestamps" , ">= 1.0.0"
+    gem.add_dependency "dm-aggregates", ">= 1.0.0"
+    gem.add_dependency "activesupport", ">=2.3.5"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
