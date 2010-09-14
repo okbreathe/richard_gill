@@ -1,23 +1,23 @@
-= richard_gill
+# richard_gill
 
 Simple Versioning for DataMapper Models
 
-<tt>richard_gill</tt>[http://github.com/okbreathe/richard_gill] tracks changes
-of your objects over time by storing serialized hash of changesets.
+[richard_gill](http://github.com/okbreathe/richard_gill) tracks changes
+of your objects over time by storing serialized hashes of changesets.
 
-This can be used to implement version control (by traversing up the changeset chain) or
-to create a log of activity.
+This can be used to implement version control (by traversing up the changeset
+chain) or to create a log of activity.
 
-== Usage
+## Usage
 
-=== Watch `SomeModel`:
+### Watch `SomeModel`:
 
     class SomeModel
       is :watched
 
 See `is_watched` in `richard_gill.rb` for options.
 
-=== Working with versions
+### Working with versions
 
     # Revert an object to a previous version
     @some_object.revert
@@ -31,7 +31,7 @@ See `is_watched` in `richard_gill.rb` for options.
 Note that calling `revert` does not make any changes to the object, and you must #save
 the object after calling revert. To do this in one step use `object.revert!`.
 
-== Storing the user with the changeset
+## Storing the user with the changeset
 
 It's nice to know WHO made the changes on the object. By default, RichardGill
 stores this as `updated_by`. This can be explicitly set when saving a version or ...
@@ -54,13 +54,13 @@ instead of passing around the user, create a User::current method!
 If Richard Gill sees that the "User" class responds to a #current method, it will use that instead of requiring
 an explicit updated_by to be passed in during object updates.
 
-== Erata
+## Erata
 
 Named for the character of Special Agent Richard Gill from the best movie to ever grace the silver screen, Hackers.
 
 "I'm watching yoooou." - Special Agent Richard Gill
 
-== Note on Patches/Pull Requests
+## Note on Patches/Pull Requests
 
 * Fork the project.
 * Make your feature addition or bug fix.
@@ -70,6 +70,6 @@ Named for the character of Special Agent Richard Gill from the best movie to eve
   (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
-== Copyright
+## Copyright
 
 Copyright (c) 2010 Asher Van Brunt. See LICENSE for details.
