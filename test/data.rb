@@ -18,6 +18,7 @@ class Article
 
   property :id,    Serial
   property :title, String
+  property :body,  Text
   property :number,Integer
   timestamps :at
 

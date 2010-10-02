@@ -104,10 +104,11 @@ module RichardGill
     # TODO This method typecasts the value twice
     versioned_properties.each do |name|
       before :"#{name}=" do |new_value|
-        prop      = self.class.properties[name]
-        old_value = prop.get(self)
-        # Skip it if its nil or the same
-        unless old_value.nil? || old_value == prop.typecast(new_value) 
+        prop = self.class.properties[name]
+        prop.lazy_load self if prop.lazy?
+        old_value = prop.get self # lazy-loaded properties won't respond to this
+        
+        unless old_value == prop.typecast(new_value) 
           pending_version_attributes[name] = [old_value,new_value]
         end
       end

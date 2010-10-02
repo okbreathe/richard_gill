@@ -77,7 +77,7 @@ class TestRichardGill < Test::Unit::TestCase
         new_article
         @article.update(:title => "changed")
         @article.update(:title => "changed1")
-        @article.update(:title => "changed2")
+        @article.update(:body  => "body")
       end
 
       should "record changes as new versions" do
@@ -86,7 +86,10 @@ class TestRichardGill < Test::Unit::TestCase
       end
 
       should "changeset should be hashes with [old_value,new_value]" do
-        assert_equal({:title => ["changed1", "changed2"] }, @article.previous_version.data)
+        versions = @article.versions
+        assert_equal({:title => ["article", "changed" ]}, versions[2].data)
+        assert_equal({:title => ["changed", "changed1"]}, versions[1].data)
+        assert_equal({:body =>  [nil, "body"]}, versions[0].data)
       end
 
       should "increment the version number" do
