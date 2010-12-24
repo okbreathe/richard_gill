@@ -54,16 +54,21 @@ module RichardGill
   #   of calling the proc is true, then a new version will be created.
   #
   # [:+unless+] 
-  #   Same as [:+if+], but evaluates if not true.
+  #   Same purpose as [:+if+], but creates versions when the proc evaluates to false
   #
-  # [:+scope+] TODO Maybe rename to parent?
-  #   obj.versions only retrieves versioning information for that particular
-  #   object, and not its associations. To get around this, we can use scoping.
+  # [:+scope+]
+  #   By default ,`obj.versions` will only retrieve the versions for `obj`. If we pass
+  #   the scope option, we can add a foreign key to the version model that will allow
+  #   us to find all versions within the scope using `object.scoped_versions`.
   #
   #   Let's say that you have three watched models: Forum, Topic and
-  #   Comment models. Forum has n topics. Topic has n Comments. 
-  #   Now we can get all the activity for Forums, Topics and Comments - but
-  #   what if we just want the activity for a particular forum?
+  #   Comment. 
+  #
+  #   Forum `has n :topics`. 
+  #   Topic `has n :comments`. 
+  #
+  #   If we wanted to retrieve all the activity associated with a particular forum,
+  #   we could scope Topic and Comment to Form:
   #
   #   class Topic
   #     is :watched, :scope => :forum
@@ -71,12 +76,17 @@ module RichardGill
   #   class Comment
   #     is :watched, :scope => :forum
   #
-  #   Scoping essentially just adds a foreign_key relationship that gets
-  #   updated with scoped object's id's as they are versioned.  Objects using
-  #   the same versioning table will still be versioned, however the
-  #   foreign_key will be null.
+  #   This will add a foreign_key column `forum_id` that will be
+  #   updated with scoped object's id as the associated objects are updated.  
+  #   
+  #   NOTE
   #
-  #   To retrieve scoped versions use #scoped_versions
+  #   Unscoped objects will still still use the same versioning
+  #   table, however, the foreign_key will obviously be null.
+  #
+  #   Scoped models must implement a method by the same name as the scope
+  #   in order to it to be saved correctly. E.g. Comment, must implement a
+  #   `#forum` method
   #
   def is_watched(opts={}, &block)
     @is_richard_gill_watching = true
@@ -257,24 +267,24 @@ module RichardGill
     # version_model, record it automatically
     def create_version
       return unless should_create_version?
-      vm = self.class.version_model
-      uk = self.class.user_model.to_s.underscore.to_sym
-      attrs = {
-        :number => vm.count(
+      model    = self.class.version_model
+      user_key = self.class.user_model.to_s.underscore.to_sym
+      attrs    = {
+        :number => model.count(
           :versionable_type => self.class,
           :versionable_id   => self.id
         ),
-        uk           => updated_by,
+        user_key     => updated_by,
         :data        => pending_version_attributes,
         :versionable_type => self.class,
         :versionable_id   => self.id
       }
 
-      if vm.is_scoped? and self.class.properties[vm.scope_key]
-        attrs[vm.scope_key] = self.send(vm.scope_key)
+      if model.is_scoped? and self.class.properties[model.scope_key]
+        attrs[model.scope_key] = self.send(model.scope_key)
       end
 
-      vm.create(attrs)
+      model.create(attrs)
 
     end
 
