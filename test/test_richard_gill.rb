@@ -1,5 +1,5 @@
-require 'helper'
-require 'data'
+require './helper'
+require './data'
 
 class TestRichardGill < Test::Unit::TestCase
 
